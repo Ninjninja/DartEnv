@@ -18,7 +18,7 @@ You need to install these packages first:
 To facilitate installation, we have uploaded the entire project base including the original openai gym code. To install, simply do 
 
 
-    git clone https://github.com/VincentYu68/DartEnv.git
+    git clone https://github.com/Ninjninja/DartEnv
     cd DartEnv
     pip install -e .
 
