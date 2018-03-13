@@ -1,14 +1,14 @@
 import numpy as np
 from gym import utils
 from gym.envs.dart import dart_env
-from gym.envs.dart.static_window import *
-
+from gym.envs.dart.push_window import *
+from pydart2.gui.trackball import Trackball
 class DartBlockPushEnv(dart_env.DartEnv, utils.EzPickle):
     def __init__(self):
         self.track_skeleton_id = -1
         control_bounds = np.array([[1.0,1.0],[-1.0,-1.0]])
-        self.action_scale = 1
-        dart_env.DartEnv.__init__(self, 'arti_data.skel', frame_skip = 2, observation_size=4, action_bounds=control_bounds)
+        self.action_scale = 10
+        dart_env.DartEnv.__init__(self, 'arti_data.skel', frame_skip = 3, observation_size=4, action_bounds=control_bounds)
         utils.EzPickle.__init__(self)
 
     # def do_simulation(self, tau, n_frames):
@@ -17,32 +17,38 @@ class DartBlockPushEnv(dart_env.DartEnv, utils.EzPickle):
     #         bod = skel.root_bodynode()
     #         bod.add_ext_force(np.array([0, 0, tau[0]]), np.array([0, 0, 0]))
     def do_simulation(self, tau, n_frames):
+        # self.robot_skeleton.set_forces(tau)
+        skel = self.robot_skeleton
+        bod = skel.bodynodes[0]
+        bod.add_ext_force(np.array([0, 0, 0.5]), np.array([tau[0], 0, 0]))
+        bod = skel.bodynodes[1]
+        bod.add_ext_force(np.array([0, 0, 0.5]), np.array([tau[1], 0, 0]))
         for _ in range(n_frames):
-            # self.robot_skeleton.set_forces(tau)
-            skel = self.robot_skeleton
-            bod = skel.bodynodes[0]
-            bod.add_ext_force(np.array([0, 0, 0.5]), np.array([tau[0], 0, 0]))
-            bod = skel.bodynodes[1]
-            bod.add_ext_force(np.array([0, 0, 0.5]), np.array([tau[1], 0, 0]))
             self.dart_world.step()
 
 
     def _step(self, a):
         reward = 1.0
-        print(a)
+        # print(a)
         tau = np.zeros(self.robot_skeleton.ndofs)
         tau[0] = a[0] * self.action_scale
         tau[1] = a[1] * self.action_scale
         self.do_simulation(tau, self.frame_skip)
         ob = self._get_obs()
 
-        notdone = np.isfinite(ob).all() and (np.abs(ob[1]) <= .2)
-        done = not notdone
+        # notdone = np.isfinite(ob).all() and (np.abs(ob[1]) <= .2)
+        # done = not notdone
+        print(' '+str(self.dart_world.t))
+        if self.dt >0.5:
+            done = 1
+        else:
+            done = 0
         return ob, reward, done, {}
 
 
     def _get_obs(self):
-        return np.concatenate([self.robot_skeleton.q, self.robot_skeleton.dq]).ravel()
+        return self._get_viewer().getFrame()
+        #return np.concatenate([self.robot_skeleton.q, self.robot_skeleton.dq]).ravel()
 
     def reset_model(self):
         self.dart_world.reset()
@@ -57,3 +63,16 @@ class DartBlockPushEnv(dart_env.DartEnv, utils.EzPickle):
         self._get_viewer().scene.tb.trans[1] = 0.2
         self._get_viewer().scene.tb._set_theta(-45)
         self.track_skeleton_id = 0
+    def getViewer(self, sim, title=None):
+        # glutInit(sys.argv)
+        win = PushGLUTWindow(sim,title)
+        win.scene.add_camera(Trackball(theta=-45.0, phi = 0.0, zoom=0.1), 'gym_camera')
+        win.scene.set_camera(win.scene.num_cameras()-1)
+        win.run()
+        return win
+
+    def _get_viewer(self):
+        if self.viewer is None:
+            self.viewer = self.getViewer(self.dart_world)
+            self.viewer_setup()
+        return self.viewer

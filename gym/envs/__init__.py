@@ -202,7 +202,7 @@ register(
     id='DartBlockPush-v1',
     entry_point='gym.envs.dart:DartBlockPushEnv',
     reward_threshold=950.0,
-    timestep_limit=1000,
+    timestep_limit=200,
 )
 
 
