@@ -28,17 +28,27 @@ class DartBlockPushEnv(dart_env.DartEnv, utils.EzPickle):
 
 
     def _step(self, a):
-        reward = 1.0
+        # reward = 1.0
         # print(a)
         tau = np.zeros(self.robot_skeleton.ndofs)
         tau[0] = a[0] * self.action_scale
         tau[1] = a[1] * self.action_scale
-        self.do_simulation(tau, self.frame_skip)
-        ob = self._get_obs()
-
-        # notdone = np.isfinite(ob).all() and (np.abs(ob[1]) <= .2)
-        # done = not notdone
-        print(' '+str(self.dart_world.t))
+        mass_1 = a[3]
+        is_predicting = a[4]
+        body_mass = self.robot_skeleton.skel.bodynodes[0].m+ self.robot_skeleton.skel.bodynodes[1].m
+        if not is_predicting:
+            self.do_simulation(tau, self.frame_skip)
+            ob = self._get_obs()
+            reward = -1
+        else:
+            error = (mass_1 - body_mass)/body_mass
+            if error<0.1:
+                reward = 10
+            else:
+                reward = -10
+            # notdone = np.isfinite(ob).all() and (np.abs(ob[1]) <= .2)
+            # done = not notdone
+            # print(' '+str(self.dart_world.t))
         if self.dt >0.5:
             done = 1
         else:
