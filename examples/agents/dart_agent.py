@@ -10,8 +10,8 @@ if __name__ == '__main__':
 
     for i in range(1000):
         # print(i)
-        ob, reward, done, _ = env.step([np.random.uniform(-0.5,0.5),np.random.uniform(-0.5,0.5)])
-        print(done)
+        ob, reward, done, _ = env.step([np.random.uniform(-0.5,0.5),np.random.uniform(-0.5,0.5),np.random.uniform(0,3),np.random.randint(0,1)])
+        print(reward)
         if done:
             break
         env.render()

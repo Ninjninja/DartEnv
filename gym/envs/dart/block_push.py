@@ -6,7 +6,7 @@ from pydart2.gui.trackball import Trackball
 class DartBlockPushEnv(dart_env.DartEnv, utils.EzPickle):
     def __init__(self):
         self.track_skeleton_id = -1
-        control_bounds = np.array([[1.0,1.0],[-1.0,-1.0]])
+        control_bounds = np.array([[1.0,1.0,0,0],[-1.0,-1.0,1,3]])
         self.action_scale = 10
         dart_env.DartEnv.__init__(self, 'arti_data.skel', frame_skip = 3, observation_size=4, action_bounds=control_bounds)
         utils.EzPickle.__init__(self)
@@ -33,14 +33,15 @@ class DartBlockPushEnv(dart_env.DartEnv, utils.EzPickle):
         tau = np.zeros(self.robot_skeleton.ndofs)
         tau[0] = a[0] * self.action_scale
         tau[1] = a[1] * self.action_scale
-        mass_1 = a[3]
-        is_predicting = a[4]
-        body_mass = self.robot_skeleton.skel.bodynodes[0].m+ self.robot_skeleton.skel.bodynodes[1].m
+        mass_1 = a[2]
+        is_predicting = a[3]
+        body_mass = self.robot_skeleton.bodynodes[0].m+ self.robot_skeleton.bodynodes[1].m
         if not is_predicting:
             self.do_simulation(tau, self.frame_skip)
             ob = self._get_obs()
             reward = -1
         else:
+            ob = self._get_obs()
             error = (mass_1 - body_mass)/body_mass
             if error<0.1:
                 reward = 10
