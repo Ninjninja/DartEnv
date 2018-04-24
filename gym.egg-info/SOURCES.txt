@@ -43,9 +43,11 @@ gym/envs/classic_control/pendulum.py
 gym/envs/classic_control/rendering.py
 gym/envs/classic_control/assets/clockwise.png
 gym/envs/dart/__init__.py
+gym/envs/dart/block_push.py
 gym/envs/dart/cart_pole.py
 gym/envs/dart/dart_env.py
 gym/envs/dart/hopper.py
+gym/envs/dart/push_window.py
 gym/envs/dart/static_window.py
 gym/envs/debugging/__init__.py
 gym/envs/debugging/one_round_deterministic_reward.py

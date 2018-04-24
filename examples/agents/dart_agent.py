@@ -8,9 +8,9 @@ if __name__ == '__main__':
 
     env.reset()
 
-    for i in range(1000):
+    while(True):
         # print(i)
-        ob, reward, done, _ = env.step([np.random.uniform(-0.5,0.5),np.random.uniform(-0.5,0.5),np.random.uniform(0,3),np.random.randint(0,1)])
+        ob, reward, done, _ = env.step([np.random.uniform(-0.5,0.5),np.random.uniform(-0.5,0.5),np.random.uniform(3,6),np.random.randint(0,2)])
         print(reward)
         if done:
             break

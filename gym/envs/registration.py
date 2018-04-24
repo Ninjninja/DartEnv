@@ -43,7 +43,7 @@ class EnvSpec(object):
         self.reward_threshold = reward_threshold
         # Environment properties
         self.nondeterministic = nondeterministic
-        
+
         if tags is None:
             tags = {}
         self.tags = tags

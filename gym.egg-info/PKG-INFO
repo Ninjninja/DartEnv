@@ -1,4 +1,4 @@
-Metadata-Version: 1.0
+Metadata-Version: 2.1
 Name: gym
 Version: 0.7.4.dev0
 Summary: The OpenAI Gym: A toolkit for developing and comparing your reinforcement learning agents.
@@ -8,3 +8,10 @@ Author-email: gym@openai.com
 License: UNKNOWN
 Description: UNKNOWN
 Platform: UNKNOWN
+Provides-Extra: board_game
+Provides-Extra: all
+Provides-Extra: atari
+Provides-Extra: classic_control
+Provides-Extra: box2d
+Provides-Extra: parameter_tuning
+Provides-Extra: mujoco

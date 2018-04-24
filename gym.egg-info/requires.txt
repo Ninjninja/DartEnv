@@ -4,14 +4,14 @@ six
 pyglet>=1.2.0
 
 [all]
-mujoco_py>=0.4.3
-imageio
-box2d-py
-pachi-py>=0.0.19
 atari_py>=0.0.17
 Pillow
 PyOpenGL
+pachi-py>=0.0.19
+box2d-py
 PyOpenGL
+mujoco_py>=0.4.3
+imageio
 keras
 theano
 

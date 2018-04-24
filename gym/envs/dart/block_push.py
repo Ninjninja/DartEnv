@@ -43,6 +43,7 @@ class DartBlockPushEnv(dart_env.DartEnv, utils.EzPickle):
         else:
             ob = self._get_obs()
             error = (mass_1 - body_mass)/body_mass
+
             if error<0.1:
                 reward = 10
             else:
